@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class="MainRoot" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <View
+                style="@style/Divider.H"
+                android:background="#ccc" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/layout_main_tab"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_56"
+                android:background="@color/grey50"
+                android:elevation="@dimen/dp_2"
+                android:fitsSystemWindows="true"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/colorPrimary"
+                app:tabIndicatorHeight="@dimen/dp_0"
+                app:tabMode="fixed"
+                app:tabPadding="@dimen/dp_0"
+                app:tabPaddingBottom="@dimen/dp_0"
+                app:tabPaddingEnd="@dimen/dp_0"
+                app:tabPaddingStart="@dimen/dp_0"
+                app:tabPaddingTop="@dimen/dp_0">
+
+            </android.support.design.widget.TabLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_56"
+            android:fitsSystemWindows="true" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

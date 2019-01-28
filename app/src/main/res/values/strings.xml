@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Framework</string>
+    <string name="project_domain">coder.hsq.com</string>
+    <string name="year">上映时间: %s</string>
+</resources>

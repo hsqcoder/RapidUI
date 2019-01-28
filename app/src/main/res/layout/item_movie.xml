@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="ItemMovie">
+
+        <import type="pers.like.framework.main.util.StringUtil" />
+
+        <variable
+            name="movie"
+            type="pers.like.framework.sample.model.pojo.douban.Movie" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:background="@drawable/drawable_material_button_white">
+
+        <pers.like.framework.main.ui.widget.CircleImage
+            android:id="@+id/image_movie_avatar"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_90"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:picture="@{movie.images[`medium`]}" />
+
+        <TextView
+            android:id="@+id/text_movie_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:text="@{movie.title}"
+            android:textColor="#333"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintStart_toEndOf="@+id/image_movie_avatar"
+            app:layout_constraintTop_toTopOf="@+id/image_movie_avatar"
+            tools:text="电影名称" />
+
+        <RatingBar
+            android:id="@+id/rating_movie_star"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:max="@{movie.rating.max}"
+            android:progressTint="#ff9900"
+            android:rating="@{movie.rating.average}"
+            app:layout_constraintStart_toStartOf="@+id/text_movie_title"
+            app:layout_constraintTop_toBottomOf="@+id/text_movie_title" />
+
+        <pers.like.framework.main.ui.widget.TagView
+            android:id="@+id/tag_movie_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintStart_toStartOf="@+id/rating_movie_star"
+            app:layout_constraintTop_toBottomOf="@+id/rating_movie_star"
+            app:replace='@{StringUtil.join(",",movie.genres)}'
+            app:tv_text_size="@dimen/sp_8"
+            tools:tv_tags="哈哈,哈哈" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:text="@{@string/year(movie.year)}"
+            app:layout_constraintStart_toStartOf="@+id/tag_movie_tag"
+            app:layout_constraintTop_toBottomOf="@+id/tag_movie_tag"
+            tools:text="上映时间： 2009" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

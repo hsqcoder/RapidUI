@@ -1,0 +1,33 @@
+<resources>
+
+    <style name="BaseTheme.Main">
+        <item name="android:windowBackground">@color/colorAppBackground</item>
+        <item name="android:windowSoftInputMode">adjustUnspecified|stateHidden</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--透明导航栏-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="BaseTheme.Splash">
+        <item name="android:windowBackground">@mipmap/system_splash_background</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+    <style name="Divider">
+        <item name="android:background">@color/colorDivider</item>
+    </style>
+
+    <style name="Divider.H">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
+    <style name="Divider.V">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+</resources>

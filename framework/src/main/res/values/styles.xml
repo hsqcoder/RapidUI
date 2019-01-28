@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorAppBackground</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
+    </style>
+
+    <!--<style name="LoadingLayoutStyle" parent="LoadingLayout.Style">-->
+        <!--<item name="llEmptyResId">@layout/base_empty</item>-->
+        <!--<item name="llErrorResId">@layout/base_error</item>-->
+        <!--<item name="llLoadingResId">@layout/base_loading</item>-->
+        <!--<item name="llEmptyImage">@mipmap/base_empty</item>-->
+        <!--<item name="llErrorImage">@mipmap/base_error</item>-->
+        <!--<item name="llTextColor">@color/colorPrimary</item>-->
+        <!--<item name="llTextSize">12sp</item>-->
+        <!--<item name="llRetryText">重试~</item>-->
+        <!--<item name="llButtonTextSize">12sp</item>-->
+        <!--<item name="llButtonBackground">@drawable/drawable_material_button_primary</item>-->
+        <!--<item name="llButtonTextColor">@color/white</item>-->
+    <!--</style>-->
+
+    <style name="BaseToolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="BaseDialog" parent="@style/ThemeOverlay.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/shape_dialog_base</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="BaseDialog.Trans">
+        <item name="android:windowBackground">@drawable/shape_dialog_trans</item>
+    </style>
+
+    <style name="BaseDialog.Info">
+        <item name="android:windowBackground">@drawable/layer_base_dialog</item>
+    </style>
+
+    <style name="BottomSheetEdit" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="BaseLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorLabel</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/colorDivider</item>
+    </style>
+
+    <style name="Divider.Margin">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_marginStart">@dimen/dp_16</item>
+        <item name="android:layout_marginEnd">@dimen/dp_16</item>
+    </style>
+
+    <style name="BaseMenu">
+        <item name="android:background">@drawable/drawable_material_button_white_sq</item>
+        <item name="android:gravity">center</item>
+        <item name="mv_icon_size">@dimen/dp_24</item>
+        <item name="mv_title_size">@dimen/sp_15</item>
+    </style>
+
+    <style name="BaseMenu.H">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/dp_16</item>
+        <item name="mv_icon_size">@dimen/dp_16</item>
+        <item name="mv_arrow_size">@dimen/dp_16</item>
+        <item name="mv_title_size">@dimen/sp_13</item>
+        <item name="mv_spacing_horizontal">@dimen/dp_8</item>
+    </style>
+
+    <style name="BaseMenu.V">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="mv_spacing_vertical">@dimen/dp_4</item>
+    </style>
+
+</resources>
