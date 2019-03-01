@@ -19,6 +19,7 @@ import pers.like.framework.sample.base.HsqFragment;
 import pers.like.framework.sample.databinding.DoubanRoot;
 import pers.like.framework.sample.databinding.ItemMovie;
 import pers.like.framework.sample.model.pojo.douban.Movie;
+import pers.like.widget.loadview.Options;
 
 /**
  * @author Like
@@ -42,7 +43,8 @@ public class DoubanFragment extends HsqFragment {
             StatusBarUtil.setPaddingSmart(requireActivity(), mRoot.toolbar);
             BaseAdapter<Movie, ItemMovie> adapter = new BaseAdapter<>(BR.movie, R.layout.item_movie);
             ListLayout<Movie> listLayout = new ListLayout<Movie>().adapter(adapter).pageSize(10).bind(mRoot.getRoot())
-                    .loadMore(true).loadCallback(params -> mViewModel.search(params.put("q", "哈利波特")))
+                    .errorIntercept(1,new Options())
+                    .loadMore(true).loadCallback(params -> mViewModel.search(params.put("q", "天龙八部")))
                     .autoLoad();
             mViewModel.MOVIE_LIST.observe(this, listLayout.observer());
         }

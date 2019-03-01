@@ -18,6 +18,7 @@
 
     <declare-styleable name="MenuView">
         <attr name="mv_icon" format="reference" />
+        <attr name="mv_icon_tint" format="color" />
         <attr name="mv_icon_size" format="dimension" />
 
         <attr name="mv_title" format="string" />
@@ -28,6 +29,7 @@
         <attr name="mv_spacing_vertical" format="dimension" />
 
         <attr name="mv_arrow" format="reference" />
+        <attr name="mv_arrow_tint" format="color" />
         <attr name="mv_arrow_size" format="dimension" />
     </declare-styleable>
     <declare-styleable name="ArcProgress">

@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import pers.like.framework.main.R;
 
@@ -24,16 +25,18 @@ import pers.like.framework.main.R;
 
 @SuppressWarnings("unused")
 public class MenuView extends LinearLayout {
-    private AppCompatTextView mTitleView;
-    private AppCompatImageView mIconView, mArrowView;
+    private TextView mTitleView;
+    private ImageView mIconView, mArrowView;
 
     private Drawable icon;
+    private ColorStateList iconTint, arrowTint;
     private Drawable arrow;
     private int iconSize;
     private int arrowSize;
 
     private String title;
     private ColorStateList titleColor;
+
     private int titleSize;
 
     private int spacingHorizontal;
@@ -56,11 +59,13 @@ public class MenuView extends LinearLayout {
         float scale = context.getResources().getDisplayMetrics().densityDpi / 160f;
 
         icon = ta.getDrawable(R.styleable.MenuView_mv_icon);
+        iconTint = ta.getColorStateList(R.styleable.MenuView_mv_icon_tint);
         iconSize = ta.getDimensionPixelSize(R.styleable.MenuView_mv_icon_size, context.getResources().getDimensionPixelOffset(R.dimen.dp_15));
 
         mIconView = new AppCompatImageView(context);
         mIconView.setScaleType(ImageView.ScaleType.FIT_XY);
         mIconView.setImageDrawable(icon);
+        mIconView.setImageTintList(iconTint);
         LayoutParams lp1 = new LayoutParams(iconSize + 10, iconSize + 10);
         mIconView.setLayoutParams(lp1);
         addView(mIconView);
@@ -84,10 +89,12 @@ public class MenuView extends LinearLayout {
         addView(mTitleView);
 
         arrow = ta.getDrawable(R.styleable.MenuView_mv_arrow);
+        arrowTint = ta.getColorStateList(R.styleable.MenuView_mv_arrow_tint);
         arrowSize = ta.getDimensionPixelSize(R.styleable.MenuView_mv_arrow_size, context.getResources().getDimensionPixelOffset(R.dimen.dp_15));
         if (arrow != null) {
             mArrowView = new AppCompatImageView(getContext());
             mArrowView.setImageDrawable(arrow);
+            mArrowView.setImageTintList(arrowTint);
             mArrowView.setScaleType(ImageView.ScaleType.FIT_XY);
             addView(mArrowView);
             LayoutParams lp = new LayoutParams(arrowSize + 10, arrowSize + 10);
@@ -140,5 +147,16 @@ public class MenuView extends LinearLayout {
         this.mTitleView.setText(title);
     }
 
+    public TextView getTitleView() {
+        return mTitleView;
+    }
+
+    public ImageView getIconView() {
+        return mIconView;
+    }
+
+    public ImageView getArrowView() {
+        return mArrowView;
+    }
 }
 

@@ -59,7 +59,7 @@ public class ListLayout<T> extends BaseObserver<List<T>> implements BaseListLayo
                     .put("start", 0).put("count", pageSize).put("pageNum", 1).put("pageSize", pageSize)));
             mRefreshView.setOnLoadMoreListener(refreshLayout -> loadCallback.call(LoadMore.put("offset", mDataSource.size())
                     .put("limit", pageSize).put("pageSize", pageSize).put("pageNum", mDataSource.size() / pageSize + 1)
-                    .put("start", mDataSource.size() / pageSize + 1).put("count", pageSize)));
+                    .put("start", mDataSource.size()).put("count", pageSize)));
             mRefreshView.setEnableLoadMore(enableLoadMore);
             mRefreshView.setEnableRefresh(enableRefresh);
         }
