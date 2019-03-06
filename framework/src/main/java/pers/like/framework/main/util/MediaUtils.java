@@ -17,6 +17,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
@@ -114,17 +116,26 @@ public class MediaUtils {
     /**
      * 拍照获取
      */
-    public static void getPhotoFromCamera(Activity activity) {
+    public static void getPhotoFromCamera(@NonNull Object target) {
+        Context context;
+        if (target instanceof Fragment) {
+            context = ((Fragment) target).requireContext();
+        } else if (target instanceof Activity) {
+            context = (Context) target;
+        } else {
+            throw new IllegalArgumentException("target must be an Activity or a Fragment");
+        }
+
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            Toasty.error(activity, "未找到SD卡").show();
+            Toasty.error(context, "未找到SD卡").show();
             return;
         }
         String savePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         File saveDir = new File(savePath, SD_STORAGE_DIR_NAME);
         if (!saveDir.exists()) {
             if (!saveDir.mkdirs()) {
-                Toasty.error(activity, "文件创建失败!").show();
+                Toasty.error(context, "文件创建失败!").show();
                 return;
             }
         }
@@ -133,57 +144,85 @@ public class MediaUtils {
         photoFile = new File(saveDir.getAbsolutePath(), SAVE_PHONE_NAME_TEMP + timeStamp + ".jpg");
         if (photoFile.exists()) {
             if (!photoFile.delete()) {
-                Toasty.warning(activity, "缓存文件删除失败!").show();
+                Toasty.warning(context, "缓存文件删除失败!").show();
             }
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(activity, activity.getPackageName() + ".fileProvider", photoFile);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileProvider", photoFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
         } else {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
         }
-        activity.startActivityForResult(intent, REQUEST_PHOTO);
+        if (target instanceof Fragment) {
+            ((Fragment) target).startActivityForResult(intent, REQUEST_PHOTO);
+        } else {
+            ((Activity) target).startActivityForResult(intent, REQUEST_PHOTO);
+        }
     }
 
     /**
      * 从手机相册获取
      */
-    public static void getPhotoFromAlbum(Activity activity) {
+    public static void getPhotoFromAlbum(@NonNull Object target) {
+        Context context;
+        if (target instanceof Fragment) {
+            context = ((Fragment) target).requireContext();
+        } else if (target instanceof Activity) {
+            context = (Context) target;
+        } else {
+            throw new IllegalArgumentException("target must be an Activity or a Fragment");
+        }
         try {
             int sdkInt = Build.VERSION.SDK_INT;
+            Intent intent;
             if (sdkInt >= Build.VERSION_CODES.KITKAT) {
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                 pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                activity.startActivityForResult(Intent.createChooser(pickIntent, "选择图片"), REQUEST_ALBUM);
+                intent = Intent.createChooser(pickIntent, "选择图片");
             } else {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                activity.startActivityForResult(Intent.createChooser(intent, "选择图片"), REQUEST_ALBUM);
+                Intent contentIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentIntent.setType("image/*");
+                intent = Intent.createChooser(contentIntent, "选择图片");
+            }
+            if (target instanceof Fragment) {
+                ((Fragment) target).startActivityForResult(intent, REQUEST_ALBUM);
+            } else {
+                ((Activity) target).startActivityForResult(intent, REQUEST_ALBUM);
             }
         } catch (Exception e) {
-            Toasty.error(activity, "未找到系统相册").show();
+            Toasty.error(context, "未找到系统相册").show();
         }
     }
 
-    public static void onActivityResult(final Activity activity, final Handler handler,
+    public static void onActivityResult(final @NonNull Object target, final Handler handler,
                                         final int requestCode, int resultCode, final Intent data, boolean needCrop) {
-        onActivityResult(activity, handler, requestCode, resultCode, data, needCrop, new Crop());
+        onActivityResult(target, handler, requestCode, resultCode, data, needCrop, new Crop());
     }
 
-    public static void onActivityResult(final Activity activity,
+    public static void onActivityResult(final @NonNull Object target,
                                         final Handler handler, final int requestCode, int resultCode,
                                         final Intent data, boolean needCrop, Crop params) {
+
+        Context context;
+        if (target instanceof Fragment) {
+            context = ((Fragment) target).requireContext();
+        } else if (target instanceof Activity) {
+            context = (Context) target;
+        } else {
+            throw new IllegalArgumentException("target must be an Activity or a Fragment");
+        }
+
         if (resultCode != Activity.RESULT_OK) {
-            Toasty.error(activity, "图片无法获取").show();
+            Toasty.error(context, "图片无法获取").show();
             return;
         }
 
         if (requestCode == REQUEST_PHOTO) {
             if (needCrop) {
-                cropPhoto(REQUEST_PHOTO, Uri.fromFile(photoFile), activity, params);
+                cropPhoto(REQUEST_PHOTO, Uri.fromFile(photoFile), target, params);
             } else {
                 Message msg = handler.obtainMessage(0, photoFile.getAbsolutePath());
                 handler.sendMessage(msg);
@@ -192,7 +231,7 @@ public class MediaUtils {
 
         if (requestCode == REQUEST_ALBUM) {
             if (data == null || data.getData() == null) {
-                Toasty.error(activity, "无法获取该图片").show();
+                Toasty.error(context, "无法获取该图片").show();
                 return;
             }
             if (needCrop) {
@@ -200,13 +239,13 @@ public class MediaUtils {
                 if (isGooglePhotosUri(data.getData())) {
                     uri = Uri.parse(data.getData().getLastPathSegment());
                 } else if (isGooglePlayPhotosUri(data.getData())) {
-                    uri = Uri.parse(getImageUrlWithAuthority(activity, data.getData()));
+                    uri = Uri.parse(getImageUrlWithAuthority(context, data.getData()));
                 } else {
                     uri = data.getData();
                 }
-                cropPhoto(REQUEST_ALBUM, uri, activity, params);
+                cropPhoto(REQUEST_ALBUM, uri, target, params);
             } else {
-                Message msg = handler.obtainMessage(0, getPath(activity, data.getData()));
+                Message msg = handler.obtainMessage(0, getPath(context, data.getData()));
                 handler.sendMessage(msg);
             }
         }
@@ -227,9 +266,19 @@ public class MediaUtils {
     }
 
 
-    private static void cropPhoto(int type, Uri uri, Activity activity, Crop params) {
+    private static void cropPhoto(int type, Uri uri, @NonNull Object target, Crop params) {
+
+        Context context;
+        if (target instanceof Fragment) {
+            context = ((Fragment) target).requireContext();
+        } else if (target instanceof Activity) {
+            context = (Context) target;
+        } else {
+            throw new IllegalArgumentException("target must be an Activity or a Fragment");
+        }
+
         Intent intent = new Intent("com.android.camera.action.CROP");
-        String providerPath = activity.getPackageName() + ".fileProvider";
+        String providerPath = context.getPackageName() + ".fileProvider";
 
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
@@ -238,7 +287,7 @@ public class MediaUtils {
             File saveDir = new File(savePath, SD_STORAGE_DIR_NAME);
             if (!saveDir.exists()) {
                 if (!saveDir.mkdirs()) {
-                    Toasty.error(activity, "文件创建失败").show();
+                    Toasty.error(context, "文件创建失败").show();
                     return;
                 }
             }
@@ -253,20 +302,20 @@ public class MediaUtils {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri inUri;
             if (type != REQUEST_ALBUM) {
-                inUri = FileProvider.getUriForFile(activity, providerPath, photoFile);
+                inUri = FileProvider.getUriForFile(context, providerPath, photoFile);
             } else {
                 inUri = uri;
             }
             intent.setDataAndType(inUri, "image/*");
 
-            Uri outUri = FileProvider.getUriForFile(activity, providerPath, cropPhotoFile);
+            Uri outUri = FileProvider.getUriForFile(context, providerPath, cropPhotoFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outUri);
 
-            List<ResolveInfo> resInfoList = activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
             for (ResolveInfo resolveInfo : resInfoList) {
                 String packageName = resolveInfo.activityInfo.packageName;
-                activity.grantUriPermission(packageName, inUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                activity.grantUriPermission(packageName, outUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                context.grantUriPermission(packageName, inUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                context.grantUriPermission(packageName, outUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
         } else {
             intent.setDataAndType(uri, "image/*");
@@ -282,7 +331,11 @@ public class MediaUtils {
         intent.putExtra("scale", params.scale());
         intent.putExtra("scaleUpIfNeeded", params.scaleUpIfNeeded());
         intent.putExtra("return-data", false);
-        activity.startActivityForResult(intent, REQUEST_CROP);
+        if (target instanceof Fragment) {
+            ((Fragment) target).startActivityForResult(intent, REQUEST_CROP);
+        } else {
+            ((Activity) target).startActivityForResult(intent, REQUEST_CROP);
+        }
     }
 
 
@@ -380,7 +433,9 @@ public class MediaUtils {
                 e.printStackTrace();
             } finally {
                 try {
-                    is.close();
+                    if (is != null) {
+                        is.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
