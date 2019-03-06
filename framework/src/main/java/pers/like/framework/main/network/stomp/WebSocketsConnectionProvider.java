@@ -78,7 +78,11 @@ class WebSocketsConnectionProvider extends AbstractConnectionProvider {
                 LifecycleEvent openEvent = new LifecycleEvent(LifecycleEvent.Type.OPENED);
                 openEvent.setHandshakeResponseHeaders(mServerHandshakeHeaders);
                 emitLifecycleEvent(openEvent);
-                mHeartbeatDisposable = Observable.interval(30, TimeUnit.SECONDS).subscribe(a -> send("\n"));
+                mHeartbeatDisposable = Observable.interval(30, TimeUnit.SECONDS).subscribe(a -> {
+                    if (connected) {
+                        send("\n");
+                    }
+                });
             }
 
             @Override
