@@ -14,7 +14,7 @@ public class AppUtil {
     public static long versionCode(Context context) {
         try {
             PackageInfo pkg = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return pkg.getLongVersionCode();
+            return PackageInfoCompat.getLongVersionCode(pkg);
         } catch (PackageManager.NameNotFoundException e1) {
             e1.printStackTrace();
         }

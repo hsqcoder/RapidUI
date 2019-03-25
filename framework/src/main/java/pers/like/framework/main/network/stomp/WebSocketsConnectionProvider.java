@@ -80,7 +80,11 @@ class WebSocketsConnectionProvider extends AbstractConnectionProvider {
                 emitLifecycleEvent(openEvent);
                 mHeartbeatDisposable = Observable.interval(30, TimeUnit.SECONDS).subscribe(a -> {
                     if (connected) {
-                        send("\n");
+                        try {
+                            send("\n");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
