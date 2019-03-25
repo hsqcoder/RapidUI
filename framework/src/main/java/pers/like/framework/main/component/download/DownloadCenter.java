@@ -3,6 +3,7 @@ package pers.like.framework.main.component.download;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -18,7 +19,10 @@ public class DownloadCenter {
     private static final OkHttpClient mClient;
 
     static {
-        mClient = new OkHttpClient();
+        mClient = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .build();
     }
 
     public static void download(String url, DownloadCallback callback) {
