@@ -10,6 +10,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Like
@@ -20,6 +22,7 @@ public class BaseAdapter<T, DB extends ViewDataBinding> extends BaseQuickAdapter
     private int variable;
     private int resId;
     private OnItemBoundListener<DB, T> onItemBoundListener;
+    private final Map<Integer, Object> extraParams = new ConcurrentHashMap<>();
 
     public BaseAdapter(int variable, int resId) {
         super(resId, null);
@@ -30,10 +33,18 @@ public class BaseAdapter<T, DB extends ViewDataBinding> extends BaseQuickAdapter
     @Override
     protected void convert(BaseViewHolder<DB> helper, T item) {
         helper.getBinding().setVariable(variable, item);
+        for (Map.Entry<Integer, Object> entry : extraParams.entrySet()) {
+            helper.getBinding().setVariable(entry.getKey(), entry.getValue());
+        }
         if (onItemBoundListener != null) {
             onItemBoundListener.onItemBound(helper.getBinding(), item, helper.getAdapterPosition());
         }
         helper.getBinding().executePendingBindings();
+    }
+
+    public void putExtra(int variable, Object value) {
+        this.extraParams.put(variable, value);
+        //todo update all items displayed!
     }
 
     @Override

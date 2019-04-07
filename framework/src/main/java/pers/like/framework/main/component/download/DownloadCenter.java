@@ -12,22 +12,24 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @author like0
+ * @author like
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class DownloadCenter {
 
-    private static final OkHttpClient mClient;
+    private static final OkHttpClient CLIENT;
 
     static {
-        mClient = new OkHttpClient.Builder()
+        CLIENT = new OkHttpClient.Builder()
                 .readTimeout(20, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .build();
     }
 
-    public static void download(String url, DownloadCallback callback) {
+    public static Call download(String url, DownloadCallback callback) {
         Request request = new Request.Builder().url(url).build();
-        mClient.newCall(request).enqueue(new Callback() {
+        Call call = CLIENT.newCall(request);
+        call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.failed();
@@ -38,6 +40,7 @@ public class DownloadCenter {
                 callback.processResponse(response);
             }
         });
+        return call;
     }
 
 }
