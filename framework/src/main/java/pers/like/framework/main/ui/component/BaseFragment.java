@@ -1,5 +1,6 @@
 package pers.like.framework.main.ui.component;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.launcher.ARouter;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import pers.like.framework.main.BaseApplication;
@@ -60,12 +62,26 @@ public abstract class BaseFragment extends Fragment {
         if (params != null) {
             for (String key : params.keySet()) {
                 Object obj = params.get(key);
-                if (obj instanceof Integer) {
+                if (obj instanceof Short) {
+                    postcard.withShort(key, (Short) obj);
+                } else if (obj instanceof Integer) {
                     postcard.withInt(key, (Integer) obj);
+                } else if (obj instanceof Long) {
+                    postcard.withLong(key, (Long) obj);
+                } else if (obj instanceof Character) {
+                    postcard.withChar(key, (Character) obj);
+                } else if (obj instanceof Double) {
+                    postcard.withDouble(key, (Double) obj);
+                } else if (obj instanceof Byte) {
+                    postcard.withByte(key, (Byte) obj);
                 } else if (obj instanceof String) {
                     postcard.withString(key, (String) obj);
                 } else if (obj instanceof Boolean) {
                     postcard.withBoolean(key, (Boolean) obj);
+                } else if (obj instanceof Serializable) {
+                    postcard.withSerializable(key, (Serializable) obj);
+                } else if (obj instanceof Parcelable) {
+                    postcard.withParcelable(key, (Parcelable) obj);
                 } else {
                     postcard.withObject(key, obj);
                 }
