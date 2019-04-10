@@ -1,6 +1,7 @@
 package pers.like.framework.main.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.lang.ref.WeakReference;
@@ -21,17 +22,21 @@ public class BuildConfigUtil {
     }
 
     public static boolean isDebug() {
-        String buildType = getBuildConfigValue(BUILD_TYPE);
+        if (reference.get() == null) {
+            return true;
+        }
+        return isDebug(reference.get().getPackageName());
+    }
+
+    public static boolean isDebug(@NonNull String packageName) {
+        String buildType = getBuildConfigValue(packageName, BUILD_TYPE);
         return !TextUtils.isEmpty(buildType) && buildType.equals(DEBUG);
     }
 
     @SuppressWarnings("ALL")
-    private static <T> T getBuildConfigValue(String fieldName) {
-        if (reference.get() == null) {
-            return null;
-        }
+    public static <T> T getBuildConfigValue(String packageName, String fieldName) {
         try {
-            Class<?> clazz = Class.forName(reference.get().getPackageName() + ".BuildConfig");
+            Class<?> clazz = Class.forName(packageName + ".BuildConfig");
             Field field = clazz.getField(fieldName);
             return (T) field.get(null);
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
@@ -39,6 +44,5 @@ public class BuildConfigUtil {
         }
         return null;
     }
-
 
 }

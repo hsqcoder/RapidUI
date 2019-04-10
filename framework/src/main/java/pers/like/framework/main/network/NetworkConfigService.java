@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Interceptor;
+import okhttp3.logging.HttpLoggingInterceptor;
 import pers.like.framework.main.network.transform.DataConverter;
 
 /**
@@ -129,6 +130,15 @@ public interface NetworkConfigService extends IProvider {
     @NonNull
     default Map<String, String> commonStompHeaders() {
         return NONE_MAP;
+    }
+
+    /**
+     * 日志级别
+     *
+     * @return 日志级别
+     */
+    default HttpLoggingInterceptor.Level logLevel() {
+        return HttpLoggingInterceptor.Level.BASIC;
     }
 
 }

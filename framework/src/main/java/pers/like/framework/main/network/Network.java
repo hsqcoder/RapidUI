@@ -72,11 +72,7 @@ public class Network {
 
     private OkHttpClient client() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        if (BuildConfigUtil.isDebug()) {
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        }
+        logging.setLevel(networkConfigService.logLevel());
         SSLSocketFactory sslSocketFactory = null;
         X509TrustManager x509TrustManager = new X509TrustManager() {
             @SuppressLint("TrustAllX509TrustManager")
