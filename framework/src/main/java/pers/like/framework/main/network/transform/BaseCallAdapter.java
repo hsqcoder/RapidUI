@@ -41,12 +41,12 @@ public class BaseCallAdapter<DATA> implements CallAdapter<Response<DATA>, LiveDa
                     call.enqueue(new Callback<Response<DATA>>() {
                         @Override
                         public void onResponse(@NonNull Call<Response<DATA>> call, @NonNull retrofit2.Response<Response<DATA>> response) {
-                            postValue(Response.create(response));
+                            postValue(Response.create(call, response));
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<Response<DATA>> call, @NonNull Throwable t) {
-                            postValue(Response.<DATA>create(t));
+                            postValue(Response.<DATA>create(call,t));
                         }
                     });
                 }

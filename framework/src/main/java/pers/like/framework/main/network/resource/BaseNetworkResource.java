@@ -25,21 +25,21 @@ public abstract class BaseNetworkResource<DataType> {
 
     public BaseNetworkResource(@NonNull BaseExecutor executor, @NonNull Params params) {
         this.mExecutor = executor;
-        this.mResult.setValue(Resource.loading(params, null));
+        this.mResult.setValue(Resource.loading(null, params, null));
         LiveData<Response<DataType>> responseLiveData = call(params);
-        mResult.addSource(responseLiveData, requestTypeKlyResponse -> {
+        mResult.addSource(responseLiveData, response -> {
             mResult.removeSource(responseLiveData);
-            if (requestTypeKlyResponse instanceof SuccessResponse) {
+            if (response instanceof SuccessResponse) {
                 mExecutor.diskIO().execute(() -> {
-                    cache(processResponse((SuccessResponse<DataType>) requestTypeKlyResponse));
-                    SuccessResponse<DataType> response = (SuccessResponse<DataType>) requestTypeKlyResponse;
-                    mExecutor.mainThread().execute(() -> mResult.setValue(Resource.success(params, response.getData())));
+                    cache(processResponse((SuccessResponse<DataType>) response));
+                    SuccessResponse<DataType> success = (SuccessResponse<DataType>) response;
+                    mExecutor.mainThread().execute(() -> mResult.setValue(Resource.success(response.getCall(), params, success.getData(), response.getHeaders())));
                 });
-            } else if (requestTypeKlyResponse instanceof ErrorResponse) {
+            } else if (response instanceof ErrorResponse) {
                 onFetchFailed();
-                mResult.setValue(Resource.failed(params, requestTypeKlyResponse.getCode(), requestTypeKlyResponse.getMessage()));
-            } else if (requestTypeKlyResponse instanceof EmptyResponse) {
-                mExecutor.mainThread().execute(() -> mResult.setValue(Resource.failed(params, -1, "未知错误")));
+                mResult.setValue(Resource.failed(response.getCall(), params, response.getCode(), response.getMessage(), response.getHeaders()));
+            } else if (response instanceof EmptyResponse) {
+                mExecutor.mainThread().execute(() -> mResult.setValue(Resource.failed(null, params, -1, "未知错误", null)));
             }
         });
     }

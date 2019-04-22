@@ -5,6 +5,8 @@ import android.content.Context;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.service.SerializationService;
 
+import java.lang.reflect.Type;
+
 import pers.like.framework.main.util.JsonUtils;
 
 /**
@@ -22,6 +24,11 @@ public class HsqJsonServiceImpl implements SerializationService {
     @Override
     public String object2Json(Object instance) {
         return JsonUtils.toJson(instance);
+    }
+
+    @Override
+    public <T> T parseObject(String input, Type clazz) {
+        return JsonUtils.fromJson(input, clazz);
     }
 
     @Override

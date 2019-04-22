@@ -225,8 +225,8 @@ public class ListLayout<T> extends BaseObserver<List<T>> implements BaseListLayo
         private void updateRefreshView(boolean isRefresh, boolean success, boolean noMore) {
             if (page.refreshLayout() != null) {
                 if (isRefresh) {
-                    page.refreshLayout().finishRefresh(success);
-                    page.refreshLayout().setNoMoreData(noMore);
+                    page.refreshLayout().finishRefresh(300, success);
+                    page.refreshLayout().postDelayed(() -> page.refreshLayout().setNoMoreData(noMore), 310);
                 } else {
                     page.refreshLayout().finishLoadMore(0, success, noMore);
                 }

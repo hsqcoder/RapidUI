@@ -29,13 +29,13 @@ public abstract class BaseNetworkCacheResource<ResultType, RequestType> {
     public BaseNetworkCacheResource(BaseExecutor appExecutor, @NonNull Params params) {
         this.mExecutor = appExecutor;
         final LiveData<ResultType> dbSource = cache();
-        mResult.setValue(Resource.loading(params, dbSource.getValue()));
+        mResult.setValue(Resource.loading(null, params, dbSource.getValue()));
         mResult.addSource(dbSource, resultType -> {
             mResult.removeSource(dbSource);
             if (shouldFetch(resultType)) {
                 fetchFromNetwork(dbSource, params);
             } else {
-                mResult.addSource(dbSource, resultType1 -> mResult.setValue(Resource.success(params, resultType1)));
+                mResult.addSource(dbSource, resultType1 -> mResult.setValue(Resource.success(null, params, resultType1, null)));
             }
         });
     }
@@ -44,7 +44,7 @@ public abstract class BaseNetworkCacheResource<ResultType, RequestType> {
         //获取云端数据
         LiveData<Response<RequestType>> responseLiveData = call(params);
         //将数据库缓存显示到UI
-        mResult.addSource(dbSource, resultType -> mResult.setValue(Resource.loading(params, resultType)));
+        mResult.addSource(dbSource, resultType -> mResult.setValue(Resource.loading(null, params, resultType)));
         //观察网络请求结果
         mResult.addSource(responseLiveData, requestTypeKlyResponse -> {
             //网络返回时移除本地数据源
@@ -54,15 +54,15 @@ public abstract class BaseNetworkCacheResource<ResultType, RequestType> {
             if (requestTypeKlyResponse instanceof SuccessResponse) {
                 mExecutor.diskIO().execute(() -> {
                     cache(processResponse((SuccessResponse<RequestType>) requestTypeKlyResponse));
-                    mExecutor.mainThread().execute(() -> mResult.addSource(cache(), resultType -> mResult.setValue(Resource.success(params, resultType))));
+                    mExecutor.mainThread().execute(() -> mResult.addSource(cache(), resultType -> mResult.setValue(Resource.success(requestTypeKlyResponse.getCall(), params, resultType, requestTypeKlyResponse.getHeaders()))));
                 });
                 //请求失败，提示错误，并从数据库获取数据到UI
             } else if (requestTypeKlyResponse instanceof ErrorResponse) {
                 onFetchFailed();
-                mResult.addSource(dbSource, resultType -> mResult.setValue(Resource.failed(params, requestTypeKlyResponse.getCode(), requestTypeKlyResponse.getMessage())));
+                mResult.addSource(dbSource, resultType -> mResult.setValue(Resource.failed(requestTypeKlyResponse.getCall(), params, requestTypeKlyResponse.getCode(), requestTypeKlyResponse.getMessage(), requestTypeKlyResponse.getHeaders())));
                 //请求为空，直接取数据库缓存更新UI
             } else if (requestTypeKlyResponse instanceof EmptyResponse) {
-                mExecutor.mainThread().execute(() -> mResult.addSource(cache(), resultType -> mResult.setValue(Resource.success(params, resultType))));
+                mExecutor.mainThread().execute(() -> mResult.addSource(cache(), resultType -> mResult.setValue(Resource.success(null, params, resultType, null))));
             }
         });
     }

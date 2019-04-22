@@ -31,7 +31,7 @@ public class DoubanViewModel extends HsqViewModel {
     private final LiveData<Resource<DoubanListWrapper<Movie>>> DOUBAN_SEARCH = Transformations.switchMap(PARAMS_DOUBAN_SEARCH, input -> repository.search(input));
 
     public final LiveData<Resource<List<Movie>>> MOVIE_LIST = Transformations.map(DOUBAN_SEARCH, input ->
-            new Resource<>(input.params, input.code, input.data == null ? null : input.data.getSubjects(), input.status, input.message));
+            new Resource<>(input.call, input.params, input.headers, input.code, input.data == null ? null : input.data.getSubjects(), input.status, input.message));
 
     public DoubanViewModel(@NonNull Application application) {
         super(application);
