@@ -33,6 +33,10 @@ public class Cache {
         mSharedPreference.edit().putFloat(key, value).apply();
     }
 
+    public void put(String key, long value) {
+        mSharedPreference.edit().putLong(key, value).apply();
+    }
+
     public void put(String key, Object object) {
         mSharedPreference.edit().putString(key, JsonUtils.toJson(object)).apply();
     }
@@ -47,6 +51,30 @@ public class Cache {
 
     public int intValue(String key, int defValue) {
         return mSharedPreference.getInt(key, defValue);
+    }
+
+    public boolean booValue(String key) {
+        return booValue(key, false);
+    }
+
+    public boolean booValue(String key, boolean defValue) {
+        return mSharedPreference.getBoolean(key, defValue);
+    }
+
+    public float floatValue(String key) {
+        return floatValue(key, 0f);
+    }
+
+    public float floatValue(String key, float defValue) {
+        return mSharedPreference.getFloat(key, defValue);
+    }
+
+    public long longValue(String key) {
+        return longValue(key, 0L);
+    }
+
+    public long longValue(String key, long defValue) {
+        return mSharedPreference.getLong(key, defValue);
     }
 
     public String string(String key) {

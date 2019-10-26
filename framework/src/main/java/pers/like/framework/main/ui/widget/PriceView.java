@@ -108,10 +108,10 @@ public class PriceView extends View {
         int totalWidth = 0;
         if (!"--".equals(priceText)) {
             totalWidth += (int) mPaint.measureText(unit);
-            canvas.drawText(unit, getPaddingStart(), getMeasuredHeight() / 2 + (mPaint.descent() - mPaint.ascent()) / 2 - mPaint.descent(), mPaint);
+            canvas.drawText(unit, getPaddingStart(), getMeasuredHeight() / 2f + (mPaint.descent() - mPaint.ascent()) / 2 - mPaint.descent(), mPaint);
         }
         mPaint.setTextSize(priceTextSize);
-        canvas.drawText(priceText, getPaddingStart() + totalWidth, getMeasuredHeight() / 2 + (mPaint.descent() - mPaint.ascent()) / 2 - mPaint.descent(), mPaint);
+        canvas.drawText(priceText, getPaddingStart() + totalWidth, getMeasuredHeight() / 2f + (mPaint.descent() - mPaint.ascent()) / 2 - mPaint.descent(), mPaint);
 
         if (hasDeleteLine) {
             canvas.drawLine(getPaddingStart(), getMeasuredHeight() / 2, getMeasuredWidth() - getPaddingEnd(), getMeasuredHeight() / 2, mPaint);
